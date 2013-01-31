@@ -2,9 +2,11 @@
 # Ignore all dotfiles...
 .*
 # except for .gitignore
+!.gitattributes
 !.gitignore
 
 # Ignore Play! working directory #
+bin
 db
 eclipse
 lib
