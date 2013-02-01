@@ -1,0 +1,18 @@
+@(skipCurrent: Boolean = false, showInternal: Boolean = false, showExternal: Boolean = true)(body: com.sdc.play.module.plausc.providers.AuthProvider => Html)(implicit request: Request[_])
+
+@import com.sdc.play.module.plausc.PlayAuthenticate
+@import com.sdc.play.module.plausc.providers.Registry
+
+@defining(Registry.getProviders) { providers =>
+	@if(providers != null && providers.size > 0) {
+		@defining(PlayAuthenticate.isLoggedIn) { loggedIn =>
+			@defining(PlayAuthenticate.getUser.orNull) { auth =>
+			    @for(p <- providers) {
+			    	@if(((showExternal && p.isExternal) || (showInternal && !p.isExternal)) && (!loggedIn || !skipCurrent || (skipCurrent && (loggedIn && !p.getKey.equals(auth.getProvider))))) {
+			    		@body(p)
+			    	}
+			    }
+		    }
+	    }
+	}
+}

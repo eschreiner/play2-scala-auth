@@ -1,0 +1,7 @@
+@()(body: com.sdc.play.module.plausc.user.AuthUser => Html)(implicit request: Request[_])
+
+@import com.sdc.play.module.plausc.PlayAuthenticate
+
+@defining(PlayAuthenticate.getUser) { auth =>
+	@body(auth.orNull)
+}
