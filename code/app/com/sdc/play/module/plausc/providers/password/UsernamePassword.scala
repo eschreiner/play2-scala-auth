@@ -13,8 +13,8 @@ import UsernamePasswordConstants._
  */
 trait UsernamePassword {
 
-	def getEmail(): String
-	def getPassword(): String
+	def getEmail: String
+	def getPassword: String
 }
 
 abstract class UsernamePasswordAuthUser(@transient password: String, email: String)
