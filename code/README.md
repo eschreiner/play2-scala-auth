@@ -1,4 +1,4 @@
-This is your new Play 2.0 application
-=====================================
+play2-auth - module code
+========================
 
-This file will be packaged with your application, when using `play dist`.
+This is the module code.
