@@ -16,17 +16,20 @@ abstract class ExternalAuthProvider(app: Application) extends AuthProvider(app) 
 	import SettingKeys._
 
 	private def useSecureRedirectUri: Boolean = {
-		configuration.get.getBoolean(REDIRECT_URI_SECURE).get
+		configuration flatMap {
+		    _.getBoolean(REDIRECT_URI_SECURE)
+		} getOrElse
+			false
 	}
 
 	protected def getRedirectUrl(implicit request: Request[_]): String = {
-		val overrideHost = configuration.get.getString(REDIRECT_URI_HOST)
 		val isHttps = useSecureRedirectUri
-		val c = PlayAuthenticate.resolver.auth(getKey)
-		if (overrideHost.isDefined && !overrideHost.get.trim.isEmpty)
-			"http" + (if (isHttps) "s" else "") + "://" + overrideHost + c.url
-		else
-			c.absoluteURL(isHttps)
+		val call = PlayAuthenticate.resolver.auth(getKey)
+
+	    configuration flatMap { _.getString(REDIRECT_URI_HOST) } filter { ! _.trim.isEmpty } map {
+	        "http" + (if (isHttps) "s" else "") + "://" + _ + call.url
+	    } getOrElse
+	    	call.absoluteURL(isHttps)
 	}
 
 	def isExternal = true
