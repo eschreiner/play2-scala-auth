@@ -96,7 +96,7 @@ extends ExternalAuthProvider(app) {
 
 		} else {
 
-			val callbackURL = getRedirectUrl(request)
+			val callbackURL = getRedirectUrl
 
 			val reponse = service.retrieveRequestToken(callbackURL)
 

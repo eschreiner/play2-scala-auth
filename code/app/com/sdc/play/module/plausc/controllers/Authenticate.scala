@@ -19,14 +19,14 @@ object Authenticate extends Controller {
 				EXPIRES -> "0");  // Proxies.
 	}
 
-	def authenticate(provider: String)(implicit request: Request[_]) = {
+	def authenticate(provider: String) = Action { implicit request =>
 //		noCache(response());
 
 		val payload = getQueryString(PAYLOAD_KEY)
 		PlayAuthenticate.handleAuthentication(provider, payload)
 	}
 
-	def logout(implicit request: Request[_]) = {
+	def logout() = Action { implicit request =>
 //		noCache(response());
 
 		PlayAuthenticate.logout

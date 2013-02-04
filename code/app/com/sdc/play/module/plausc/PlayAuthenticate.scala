@@ -440,7 +440,7 @@ trait Resolver {
 	 *
 	 * @return
 	 */
-	def login: Call
+	def login(implicit request: Request[_]): Call
 
 	/**
 	 * Route to redirect to after authentication has been finished.
@@ -452,7 +452,7 @@ trait Resolver {
 	 *
 	 * @return
 	 */
-	def afterAuth: Call
+	def afterAuth(implicit request: Request[_]): Call
 
 	/**
 	 * This should usually point to the route where you registered
@@ -468,7 +468,7 @@ trait Resolver {
 	 *
 	 * @return a Call to follow
 	 */
-	def auth(provider: String): Call
+	def auth(provider: String)(implicit request: Request[_]): Call
 
 	/**
 	 * If you set the accountAutoMerge setting to true, you might return
@@ -476,7 +476,7 @@ trait Resolver {
 	 *
 	 * @return
 	 */
-	def askMerge: Call
+	def askMerge(implicit request: Request[_]): Call
 
 	/**
 	 * If you set the accountAutoLink setting to true, you might return null
@@ -484,7 +484,7 @@ trait Resolver {
 	 *
 	 * @return
 	 */
-	def askLink: Call
+	def askLink(implicit request: Request[_]): Call
 
 	/**
 	 * Route to redirect to after logout has been finished.
@@ -495,7 +495,7 @@ trait Resolver {
 	 *
 	 * @return
 	 */
-	def afterLogout: Call
+	def afterLogout(implicit request: Request[_]): Call
 
 	def onException(e: AuthException): Call = null
 }

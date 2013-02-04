@@ -157,10 +157,10 @@ extends AuthProvider(app) {
 			case WRONG_PASSWORD =>
 				// don't expose this - it might harm users privacy if anyone
 				// knows they signed up for our service
-				onLoginUserNotFound(context)
+				onLoginUserNotFound
 			case NOT_FOUND =>
 				// forward to login page
-				onLoginUserNotFound(context)
+				onLoginUserNotFound
 			case _ =>
 				throw new AuthException("Something in login went wrong");
 			}
@@ -169,7 +169,7 @@ extends AuthProvider(app) {
 		}
 	}
 
-	protected def onLoginUserNotFound(context: Context) = PlayAuthenticate.resolver.login.url
+	protected def onLoginUserNotFound(implicit request: Request[_]) = PlayAuthenticate.resolver.login.url
 
 	override def getSessionAuthUser(id: String, expires: Long): AuthUser = {
 		new SessionUsernamePasswordAuthUser(getKey, id, expires)

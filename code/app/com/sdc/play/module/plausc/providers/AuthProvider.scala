@@ -29,7 +29,7 @@ abstract class AuthProvider(application: Application) extends Plugin {
 
 	override def onStop = Registry.unregister(getKey)
 
-	def getUrl = PlayAuthenticate.resolver.auth(getKey).url
+	def getUrl(implicit request: Request[_]) = PlayAuthenticate.resolver.auth(getKey).url
 
 	protected def getAbsoluteUrl(implicit request: Request[_]): String = {
 		PlayAuthenticate.resolver.auth(getKey).absoluteURL(false)
