@@ -1,9 +1,7 @@
 package com.sdc.play.module.plausc
 
-import java.util.Date
-
 import play._
-import play.i18n.Messages
+import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.mvc.Results._
 
@@ -27,8 +25,7 @@ object PlayAuthenticate {
 
 	def getUserService: UserService = {
 		if (userService == null) {
-			throw new RuntimeException(
-					Messages.get("playauthenticate.core.exception.no_user_service"));
+			throw new RuntimeException(Messages("playauthenticate.core.exception.no_user_service"))
 		}
 		userService
 	}
@@ -283,8 +280,7 @@ object PlayAuthenticate {
 	private def signupUser(u: AuthUser): AuthUser = {
 		val id = getUserService.save(u)
 		if (id == null) {
-			throw new AuthException(
-					Messages.get("playauthenticate.core.exception.signupuser_failed"));
+			throw new AuthException(Messages("playauthenticate.core.exception.signupuser_failed"))
 		}
 		u
 	}
@@ -294,8 +290,7 @@ object PlayAuthenticate {
 		if (ap.isEmpty) {
 			// Provider wasn't found and/or user was fooling with our stuff -
 			// tell him off:
-			return NotFound(Messages.get(
-					"playauthenticate.core.exception.provider_not_found", provider))
+			return NotFound(Messages("play2_auth.error.provider_not_found", provider))
 		}
 		try {
 			val o = ap.get.authenticate(payload)
@@ -373,8 +368,7 @@ object PlayAuthenticate {
 							val c = resolver.askMerge
 							if (c == null) {
 								throw new RuntimeException(
-										Messages.get(
-												"playauthenticate.core.exception.merge.controller_undefined",
+										Messages("playauthenticate.core.exception.merge.controller_undefined",
 												SETTING_KEY_ACCOUNT_AUTO_MERGE))
 							}
 							storeMergeUser(newUser)
@@ -405,8 +399,7 @@ object PlayAuthenticate {
 						val c = resolver.askLink
 						if (c == null) {
 							throw new RuntimeException(
-									Messages.get(
-											"playauthenticate.core.exception.link.controller_undefined",
+									Messages("playauthenticate.core.exception.link.controller_undefined",
 											SETTING_KEY_ACCOUNT_AUTO_LINK))
 						}
 						storeLinkUser(newUser)
@@ -417,8 +410,7 @@ object PlayAuthenticate {
 
 				loginAndRedirect(loginUser)
 			} else {
-				InternalServerError(Messages
-						.get("playauthenticate.core.exception.general"))
+				InternalServerError(Messages("playauthenticate.core.exception.general"))
 			}
 		} catch {
 		    case e: AuthException => {
