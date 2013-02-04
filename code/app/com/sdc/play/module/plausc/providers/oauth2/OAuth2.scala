@@ -33,7 +33,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-import play._
+import play.api._
 import play.api.mvc._
 import play.libs.WS
 import play.libs.WS.Response
@@ -69,7 +69,7 @@ extends ExternalAuthProvider(app) {
 
 	private def getAccessTokenParams(c: Configuration, code: String)(implicit request: Request[_]) = {
 		val params =
-			new BasicNameValuePair(CLIENT_SECRET, c.getString(SK_CLIENT_SECRET)) ::
+			new BasicNameValuePair(CLIENT_SECRET, c.getString(SK_CLIENT_SECRET).get) ::
 			new BasicNameValuePair(GRANT_TYPE, AUTHORIZATION_CODE) ::
 			new BasicNameValuePair(CODE, code) ::
 			getParams(c)
@@ -78,9 +78,9 @@ extends ExternalAuthProvider(app) {
 	}
 
 	protected def getAccessToken(code: String)(implicit request: Request[_]): I = {
-		val c = configuration
+		val c = configuration.get
 		val params = getAccessTokenParams(c, code)
-		val url = c.getString(ACCESS_TOKEN_URL)
+		val url = c.getString(ACCESS_TOKEN_URL).get
 		val r = WS.url(url)
 				.setHeader("Content-Type", "application/x-www-form-urlencoded")
 				.post(params).get(PlayAuthenticate.TIMEOUT)
@@ -92,9 +92,9 @@ extends ExternalAuthProvider(app) {
 
 	protected def getAuthUrl(state: String)(implicit request: Request[_]): String = {
 
-		val c = configuration
+		val c = configuration.get
 		val params =
-			new BasicNameValuePair(SCOPE, c.getString(SK_SCOPE)) ::
+			new BasicNameValuePair(SCOPE, c.getString(SK_SCOPE).get) ::
 			new BasicNameValuePair(RESPONSE_TYPE, CODE) ::
 			getParams(c)
 		if (state != null) {
@@ -107,13 +107,13 @@ extends ExternalAuthProvider(app) {
 	}
 
 	private def getParams(c: Configuration)(implicit request: Request[_]) = {
-		List(new BasicNameValuePair(CLIENT_ID, c.getString(SK_CLIENT_ID)),
+		List(new BasicNameValuePair(CLIENT_ID, c.getString(SK_CLIENT_ID).get),
 			new BasicNameValuePair(REDIRECT_URI, getRedirectUrl(request)))
 	}
 
 	override def authenticate(payload: Object)(implicit request: Request[_]): Object = {
 
-		if (Logger.isDebugEnabled()) {
+		if (Logger.isDebugEnabled) {
 			Logger.debug("Returned with URL: '" + request.uri + "'")
 		}
 

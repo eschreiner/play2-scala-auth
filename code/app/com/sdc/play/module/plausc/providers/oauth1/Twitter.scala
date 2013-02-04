@@ -1,6 +1,6 @@
 package com.sdc.play.module.plausc.providers.oauth1
 
-import play._
+import play.api._
 import play.api.libs.concurrent.Promise
 import play.api.libs.json.JsValue
 import play.api.libs.oauth._
@@ -28,12 +28,12 @@ extends OAuth1AuthProvider[TwitterAuthUser, TwitterAuthInfo](app) {
 
 	override protected def transform(info: TwitterAuthInfo): TwitterAuthUser = {
 
-	    val c = configuration
+	    val c = configuration.get
 
-		val url = c.getString(USER_INFO_URL_SETTING_KEY)
+		val url = c.getString(USER_INFO_URL_SETTING_KEY).get
 
 		val token = new RequestToken(info.token, info.secret)
-		val cK = new ConsumerKey(c.getString(CONSUMER_KEY), c.getString(CONSUMER_SECRET))
+		val cK = new ConsumerKey(c.getString(CONSUMER_KEY).get, c.getString(CONSUMER_SECRET).get)
 
 		val op = new OAuthCalculator(cK, token)
 

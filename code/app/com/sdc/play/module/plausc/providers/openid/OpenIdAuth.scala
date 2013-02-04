@@ -1,6 +1,6 @@
 package com.sdc.play.module.plausc.providers.openid
 
-import play._
+import play.api._
 import play.libs.F.Promise
 import play.libs.OpenID
 import play.libs.OpenID.UserInfo
@@ -44,7 +44,7 @@ class OpenIdAuthProvider(app: Application) extends ExternalAuthProvider(app) {
 
 	def authenticate(payload:  Object)(implicit request: Request[_]): Object = {
 
-		if (Logger.isDebugEnabled()) {
+		if (Logger.isDebugEnabled) {
 			Logger.debug("Returned with URL: '" + request.uri + "'")
 		}
 
@@ -102,10 +102,10 @@ class OpenIdAuthProvider(app: Application) extends ExternalAuthProvider(app) {
 	}
 
 	private def getAttributes(subKey: String): Map[String,String] = {
-		val attributes = configuration.getConfig(ATTRIBUTES + "." + subKey)
+		val attributes = configuration.get.getConfig(ATTRIBUTES + "." + subKey).get
 		if (attributes != null) {
-			val keys = attributes.keys.iterator.asScala
-			keys map {key => (key,attributes.getString(key))} toMap
+			val keys = attributes.keys.iterator
+			keys map {key => (key,attributes.getString(key).get)} toMap
 		} else null
 	}
 

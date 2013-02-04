@@ -82,15 +82,12 @@ extends DefaultUsernamePasswordAuthUser(password,email) {
 
 }
 
-import play.Application
+import play.api.Application
 import play.api.data.Form
 import play.api.mvc._
 import play.mvc.Http
 import play.mvc.Http.Context
 
-import com.feth.play.module.mail.Mailer;
-import com.feth.play.module.mail.Mailer.Mail;
-import com.feth.play.module.mail.Mailer.Mail.Body;
 import com.sdc.play.module.plausc._
 import com.sdc.play.module.plausc.providers.AuthProvider
 
@@ -100,16 +97,16 @@ abstract class UsernamePasswordAuthProvider[R,
 extends AuthProvider(app) {
 
 	override protected def neededSettingKeys = {
-		SETTING_KEY_MAIL +"."+ SETTING_KEY_MAIL_DELAY ::
-		SETTING_KEY_MAIL +"."+ SETTING_KEY_MAIL_FROM +"."+ SETTING_KEY_MAIL_FROM_EMAIL ::
+//		SETTING_KEY_MAIL +"."+ SETTING_KEY_MAIL_DELAY ::
+//		SETTING_KEY_MAIL +"."+ SETTING_KEY_MAIL_FROM +"."+ SETTING_KEY_MAIL_FROM_EMAIL ::
 		Nil
 	}
 
-	protected var mailer: Mailer = null
+//	protected var mailer: Mailer = null
 
 	override def onStart = {
 		super.onStart
-		mailer = Mailer.getCustomMailer(configuration.getConfig(SETTING_KEY_MAIL));
+//		mailer = Mailer.getCustomMailer(configuration.getConfig(SETTING_KEY_MAIL));
 	}
 
 	def getKey = PROVIDER_KEY
@@ -203,17 +200,18 @@ extends AuthProvider(app) {
 			user.asInstanceOf[NameIdentity].getName
 		} else null
 
-		return getEmailName(user.getEmail, name);
+		throw new Exception("not implemented")
+//		return getEmailName(user.getEmail, name);
 	}
 
-	protected def getEmailName(email: String, name: String) = Mailer.getEmailName(email, name)
+//	protected def getEmailName(email: String, name: String) = Mailer.getEmailName(email, name)
 
 	protected def generateVerificationRecord(user: US): R
 
 	private def sendVerifyEmailMailing(context: Context, user: US) = {
 		val subject = getVerifyEmailMailingSubject(user, context)
 		val record = generateVerificationRecord(user);
-		val body = getVerifyEmailMailingBody(record, user, context)
+//		val body = getVerifyEmailMailingBody(record, user, context)
 //		val verifyMail = new Mail(subject, body, new String[] { getEmailName(user) })
 //		mailer.sendMail(verifyMail)
 	}
@@ -221,7 +219,7 @@ extends AuthProvider(app) {
 	override def isExternal = false
 
 	protected def getVerifyEmailMailingSubject(user: US, context: Context): String
-	protected def getVerifyEmailMailingBody(verificationRecord: R, user: US, context: Context): Body
+//	protected def getVerifyEmailMailingBody(verificationRecord: R, user: US, context: Context): Body
 
 	protected def buildLoginAuthUser(login: L, context: Context): UL
 	protected def buildSignupAuthUser(signup: S, context: Context): US
@@ -270,8 +268,8 @@ object UsernamePasswordConstants {
 	val PROVIDER_KEY = "password"
 
 	val SETTING_KEY_MAIL = "mail"
-	val SETTING_KEY_MAIL_FROM_EMAIL = Mailer.SettingKeys.FROM_EMAIL
-	val SETTING_KEY_MAIL_DELAY = Mailer.SettingKeys.DELAY
-	val SETTING_KEY_MAIL_FROM = Mailer.SettingKeys.FROM
+//	val SETTING_KEY_MAIL_FROM_EMAIL = Mailer.SettingKeys.FROM_EMAIL
+//	val SETTING_KEY_MAIL_DELAY = Mailer.SettingKeys.DELAY
+//	val SETTING_KEY_MAIL_FROM = Mailer.SettingKeys.FROM
 
 }

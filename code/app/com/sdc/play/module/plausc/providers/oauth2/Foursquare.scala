@@ -68,7 +68,7 @@ with ExtendedIdentity with PicturedIdentity {
 	}
 }
 
-import play._
+import play.api._
 import play.libs.WS
 import play.libs.WS.Response
 
@@ -90,7 +90,7 @@ extends OAuth2AuthProvider[FoursquareAuthUser, FoursquareAuthInfo](app) {
 
 	override protected def transform(info: FoursquareAuthInfo, state: String): FoursquareAuthUser = {
 
-		val url = configuration.getString(USER_INFO_URL_SETTING_KEY)
+		val url = configuration.get.getString(USER_INFO_URL_SETTING_KEY).get
 		val r = WS.url(url).
 				setQueryParameter(OAUTH_TOKEN, info.token).
 				setQueryParameter("v", VERSION).

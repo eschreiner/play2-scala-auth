@@ -54,7 +54,7 @@ object LinkedinConstants {
 
 }
 
-import play._
+import play.api._
 
 import com.sdc.play.module.plausc._
 
@@ -64,7 +64,7 @@ extends OAuth1AuthProvider[LinkedinAuthUser, LinkedinAuthInfo](app) {
 	private val USER_INFO_URL_SETTING_KEY  = "userInfoUrl"
 	private val USER_EMAIL_URL_SETTING_KEY = "userEmailUrl"
 
-	def getKey() = LinkedinConstants.PROVIDER_KEY
+	def getKey = LinkedinConstants.PROVIDER_KEY
 
 	import play.api.libs.concurrent.Promise
 	import play.api.libs.json.JsValue
@@ -76,12 +76,12 @@ extends OAuth1AuthProvider[LinkedinAuthUser, LinkedinAuthInfo](app) {
 	import OASettingKeys._
 
 	protected def transform(info: LinkedinAuthInfo): LinkedinAuthUser = {
-		val c = configuration
-		val url      = c.getString(USER_INFO_URL_SETTING_KEY)
-		val urlEmail = c.getString(USER_EMAIL_URL_SETTING_KEY)
+		val c = configuration.get
+		val url      = c.getString(USER_INFO_URL_SETTING_KEY).get
+		val urlEmail = c.getString(USER_EMAIL_URL_SETTING_KEY).get
 
 		val token = new RequestToken(info.token, info.secret)
-		val cK = new ConsumerKey(c.getString(CONSUMER_KEY), c.getString(CONSUMER_SECRET))
+		val cK = new ConsumerKey(c.getString(CONSUMER_KEY).get, c.getString(CONSUMER_SECRET).get)
 
 		val op = new OAuthCalculator(cK, token)
 

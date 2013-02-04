@@ -1,6 +1,6 @@
 package com.sdc.play.module.plausc.providers.ext
 
-import play.Application
+import play.api.Application
 import play.api.mvc._
 
 import com.sdc.play.module.plausc.PlayAuthenticate
@@ -18,14 +18,14 @@ abstract class ExternalAuthProvider(app: Application) extends AuthProvider(app) 
 	import SettingKeys._
 
 	private def useSecureRedirectUri: Boolean = {
-		val secure = configuration.getBoolean(REDIRECT_URI_SECURE)
+		val secure = configuration.get.getBoolean(REDIRECT_URI_SECURE).get
 		if (secure == null)
-			configuration.getBoolean(SECURE_REDIRECT_URI)
+			configuration.get.getBoolean(SECURE_REDIRECT_URI).get
 		else secure
 	}
 
 	protected def getRedirectUrl(implicit request: Request[_]): String = {
-		val overrideHost = configuration.getString(REDIRECT_URI_HOST)
+		val overrideHost = configuration.get.getString(REDIRECT_URI_HOST).get
 		val isHttps = useSecureRedirectUri
 		val c = PlayAuthenticate.resolver.auth(getKey)
 		if (overrideHost != null && !overrideHost.trim.isEmpty)

@@ -45,7 +45,7 @@ with ExtendedIdentity with PicturedIdentity with ProfiledIdentity with LocaleIde
 
 }
 
-import play._
+import play.api._
 import play.libs.WS
 import play.libs.WS.Response
 
@@ -58,7 +58,7 @@ extends OAuth2AuthProvider[GoogleAuthUser, GoogleAuthInfo](app) {
 
 	protected def transform(info: GoogleAuthInfo, state: String): GoogleAuthUser = {
 
-		val url = configuration.getString(USER_INFO_URL_SETTING_KEY)
+		val url = configuration.get.getString(USER_INFO_URL_SETTING_KEY).get
 		val r = WS.url(url).
 				setQueryParameter(ACCESS_TOKEN, info.token).
 				get.get(PlayAuthenticate.TIMEOUT)

@@ -55,7 +55,7 @@ import java.util._
 import org.apache.http.NameValuePair
 import org.apache.http.client.utils.URLEncodedUtils
 
-import play._
+import play.api._
 import play.libs.WS
 import play.libs.WS.Response
 
@@ -73,7 +73,7 @@ extends OAuth2AuthProvider[FacebookAuthUser, FacebookAuthInfo](app) {
 	@Override
 	protected def transform(info: FacebookAuthInfo, state: String): FacebookAuthUser = {
 
-		val url = configuration.getString(USER_INFO_URL_SETTING_KEY)
+		val url = configuration.get.getString(USER_INFO_URL_SETTING_KEY).get
 		val r = WS
 				.url(url)
 				.setQueryParameter(ACCESS_TOKEN,info.token).get()

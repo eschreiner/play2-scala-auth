@@ -22,7 +22,7 @@ extends OAuth1AuthUser(id,info,state) with NameIdentity with AuthUserIdentity {
 }
 
 import oauth.signpost.exception.OAuthException
-import play._
+import play.api._
 import play.api.mvc._
 import play.api.libs.oauth._
 import play.mvc.Http
@@ -64,19 +64,19 @@ extends ExternalAuthProvider(app) {
 
 		val uri = request.uri
 
-		if (Logger.isDebugEnabled()) {
+		if (Logger.isDebugEnabled) {
 			Logger.debug("Returned with URL: '" + uri + "'")
 		}
 
-		val c = configuration
+		val c = configuration.get
 		import OASettingKeys._
 
 		val key = new ConsumerKey(
-				c.getString(CONSUMER_KEY),
-				c.getString(CONSUMER_SECRET))
-		val requestTokenURL  = c.getString(REQUEST_TOKEN_URL)
-		val accessTokenURL   = c.getString(ACCESS_TOKEN_URL)
-		val authorizationURL = c.getString(AUTHORIZATION_URL)
+				c.getString(CONSUMER_KEY).get,
+				c.getString(CONSUMER_SECRET).get)
+		val requestTokenURL  = c.getString(REQUEST_TOKEN_URL).get
+		val accessTokenURL   = c.getString(ACCESS_TOKEN_URL).get
+		val authorizationURL = c.getString(AUTHORIZATION_URL).get
 		val info = new ServiceInfo(requestTokenURL, accessTokenURL, authorizationURL, key)
 		val service = new OAuth(info, true)
 

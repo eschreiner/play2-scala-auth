@@ -1,6 +1,6 @@
 package com.sdc.play.module.plausc
 
-import play._
+import play.api._
 import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.mvc.Results._
@@ -36,7 +36,7 @@ object PlayAuthenticate {
 	private val EXPIRES_KEY    = "pa.u.exp"
 	private val SESSION_ID_KEY = "pa.s.id"
 
-	def configuration = Play.application.configuration.getConfig(SETTING_KEY_PLAY_AUTHENTICATE)
+	def configuration = Play.unsafeApplication.configuration.getConfig(SETTING_KEY_PLAY_AUTHENTICATE).get
 
 	val TIMEOUT = 10l * 1000
 	private val MERGE_USER_KEY: String = null
@@ -121,9 +121,9 @@ object PlayAuthenticate {
 		}
 	}
 
-	def isAccountAutoMerge:    Boolean = configuration.getBoolean(SETTING_KEY_ACCOUNT_AUTO_MERGE)
-	def isAccountAutoLink:     Boolean = configuration.getBoolean(SETTING_KEY_ACCOUNT_AUTO_LINK)
-	def isAccountMergeEnabled: Boolean = configuration.getBoolean(SETTING_KEY_ACCOUNT_MERGE_ENABLED)
+	def isAccountAutoMerge:    Boolean = configuration.getBoolean(SETTING_KEY_ACCOUNT_AUTO_MERGE).get
+	def isAccountAutoLink:     Boolean = configuration.getBoolean(SETTING_KEY_ACCOUNT_AUTO_LINK).get
+	def isAccountMergeEnabled: Boolean = configuration.getBoolean(SETTING_KEY_ACCOUNT_MERGE_ENABLED).get
 
 	private def getPlayAuthSessionId(implicit request: Request[_]): (Session,String) = {
 		// Generate a unique id
@@ -218,7 +218,7 @@ object PlayAuthenticate {
 		} else {
 			// go to root instead, but log this
 			Logger.warn("Resolver did not contain information about where to go - redirecting to /")
-			val afterAuthFallback = configuration.getString(settingFallback)
+			val afterAuthFallback = configuration.getString(settingFallback).get
 			if (afterAuthFallback != null && afterAuthFallback != "") {
 				afterAuthFallback
 			} else {

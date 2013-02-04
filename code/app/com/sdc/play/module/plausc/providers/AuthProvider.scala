@@ -1,6 +1,6 @@
 package com.sdc.play.module.plausc.providers
 
-import play._
+import play.api._
 import play.api.mvc._
 import play.mvc.Http
 
@@ -15,18 +15,14 @@ abstract class AuthProvider(application: Application) extends Plugin {
 
 	override def onStart = {
 
-		val neededSettings = neededSettingKeys
-		if (neededSettings != null) {
-			val c = configuration
-			if (c == null) {
-				throw new RuntimeException("No settings for provider '"+ getKey +"' available at all!")
-			}
-			for (key <- neededSettings) {
-				val setting = c.getString(key)
-				if (setting == null || "".equals(setting)) {
-					throw new RuntimeException("Provider '" + getKey
-							+ "' missing needed setting '" + key + "'")
-				}
+		val c = configuration
+		if (c.isEmpty) throw new RuntimeException("No settings for provider '"+ getKey +"' available at all!")
+
+		for (key <- neededSettingKeys) {
+			val setting = c.get.getString(key)
+			if (setting.isEmpty || "".equals(setting.get)) {
+				throw new RuntimeException("Provider '" + getKey
+						+ "' missing needed setting '" + key + "'")
 			}
 		}
 
