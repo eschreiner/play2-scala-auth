@@ -14,6 +14,7 @@ import play.api.test.Helpers._
 import org.specs2.mutable._
 
 import com.sdc.play.module.plausc.providers.password.UsernamePasswordConstants
+import com.sdc.play.module.plausc.providers.oauth1.LinkedinConstants
 
 /**
  * @author  Dr. Erich W. Schreiner - Software Design &amp; Consulting GmbH
@@ -22,7 +23,9 @@ import com.sdc.play.module.plausc.providers.password.UsernamePasswordConstants
  */
 class AuthenticationSpec extends Specification {
 
-    def app0 = FakeApplication(additionalConfiguration=Map("smtp.mock"->"true"))
+	val linkedinPlugin = List("com.sdc.play.module.plausc.providers.oauth1.LinkedinAuthProvider")
+
+	def app0 = FakeApplication(additionalConfiguration=Map("smtp.mock"->"true"))
 
     "The Authenticate helper" should {
     	"reads the configuration as I want" in {
@@ -38,6 +41,13 @@ class AuthenticationSpec extends Specification {
 //    			println("content: "+ contentAsString(result))
     		}
         }
+//    	"tries to contact Linkedin" in {
+//    		running(FakeApplication(new File("test"),additionalPlugins=linkedinPlugin)) {
+//    			implicit val request = fakeRequest.getWrappedRequest
+//    			val result = Authenticate.authenticate(LinkedinConstants.PROVIDER_KEY)(request)
+//    			println(result)
+//    		}
+//    	}
     }
 
 }

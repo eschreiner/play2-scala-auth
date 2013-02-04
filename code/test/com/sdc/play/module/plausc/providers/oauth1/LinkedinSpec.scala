@@ -30,12 +30,13 @@ class LinkedinSpec extends Specification {
 				("play2-auth.linkedin.userEmailUrl" -> "http://api.linkedin.com/v1/people/~/email-address?format=json")
 
 	"The Linkedin provider" should {
-		"complain about completely missing configuration" in {
+	  // this will read in the conf/reference.conf and fail miserably
+//		"complain about completely missing configuration" in {
+//			running(FakeApplication(new File("missing"),additionalPlugins=linkedinPlugin)) {
+//			} must throwA[RuntimeException](message = "No settings for provider 'linkedin' available at all!")
+//		}
+		"read default configuration from file conf/reference.conf" in {
 			running(FakeApplication(additionalPlugins=linkedinPlugin)) {
-			} must throwA[RuntimeException](message = "No settings for provider 'linkedin' available at all!")
-		}
-		"read default configuration from file test/conf/application.conf" in {
-			running(FakeApplication(new File("test"),additionalPlugins=linkedinPlugin)) {
 			} must throwA[RuntimeException](message = "Provider 'linkedin' is missing needed setting\\(s\\): consumerKey, consumerSecret")
 		}
 		"complain about partially missing configuration" in {
