@@ -20,17 +20,9 @@ class LinkedinSpec extends Specification {
 	    		"play2-auth.linkedin.accessTokenUrl" -> "hello",
 	    		"play2-auth.linkedin.authorizationUrl" -> "hello",
 	    		"play2-auth.linkedin.requestTokenUrl" -> "hello")
-	val fullConfiguration = Map(
-	    		"play2-auth.linkedin.redirectUri.secure" -> "false",
-	    		"play2-auth.linkedin.accessTokenUrl" -> "hello",
-	    		"play2-auth.linkedin.authorizationUrl" -> "hello",
-	    		"play2-auth.linkedin.requestTokenUrl" -> "hello",
-	    		"play2-auth.linkedin.consumerKey" -> "vfoplwmwdece",
-	    		"play2-auth.linkedin.consumerSecret" -> "SFKb6U0PHtpqT3ys")
-
-	def app = FakeApplication(
-	    additionalPlugins=linkedinPlugin,
-	    additionalConfiguration=fullConfiguration)
+	val fullConfiguration = partialConfiguration +
+				("play2-auth.linkedin.consumerKey" -> "vfoplwmwdece") +
+	    		("play2-auth.linkedin.consumerSecret" -> "SFKb6U0PHtpqT3ys")
 
 	"The Linkedin provider" should {
 		"complain about completely missing configuration" in {
@@ -42,7 +34,7 @@ class LinkedinSpec extends Specification {
 			} must throwA[RuntimeException](message = "Provider 'linkedin' is missing needed setting\\(s\\): consumerKey, consumerSecret")
 		}
 		"check its configuration" in {
-			running(app) {
+			running(FakeApplication(additionalPlugins=linkedinPlugin,additionalConfiguration=fullConfiguration)) {
 			}
 		}
 	}
