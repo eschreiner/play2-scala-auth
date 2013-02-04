@@ -16,10 +16,7 @@ abstract class ExternalAuthProvider(app: Application) extends AuthProvider(app) 
 	import SettingKeys._
 
 	private def useSecureRedirectUri: Boolean = {
-		configuration flatMap {
-		    _.getBoolean(REDIRECT_URI_SECURE)
-		} getOrElse
-			false
+		configuration flatMap { _.getBoolean(REDIRECT_URI_SECURE) } getOrElse false
 	}
 
 	protected def getRedirectUrl(implicit request: Request[_]): String = {
