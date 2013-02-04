@@ -76,7 +76,7 @@ extends ExternalAuthProvider(app) {
 				c.getString(CONSUMER_SECRET))
 		val requestTokenURL  = c.getString(REQUEST_TOKEN_URL)
 		val accessTokenURL   = c.getString(ACCESS_TOKEN_URL)
-		val authorizationURL = c.getString(AUTHORIZATION_URL);
+		val authorizationURL = c.getString(AUTHORIZATION_URL)
 		val info = new ServiceInfo(requestTokenURL, accessTokenURL, authorizationURL, key)
 		val service = new OAuth(info, true)
 
@@ -87,7 +87,7 @@ extends ExternalAuthProvider(app) {
 			val retrieveAccessToken = service.retrieveAccessToken(rtoken, verifier)
 
 			retrieveAccessToken.fold(
-				e => throw new AuthException(e.getLocalizedMessage()),
+				e => throw new AuthException(e.getLocalizedMessage),
 				s => {
 					val i = buildInfo(s)
 					transform(i)
@@ -102,7 +102,7 @@ extends ExternalAuthProvider(app) {
 
 			reponse.fold(
 				// Exception happened
-				e => throw new AuthException(e.getLocalizedMessage()),
+				e => throw new AuthException(e.getLocalizedMessage),
 				s => {
 				// All good, we have the request token
 					val token = s.token
@@ -137,6 +137,6 @@ object OAuth1Helper {
 	import play.libs.Json
 
 	def promiseFor(url: String, op: OAuthCalculator) = WS.url(url).sign(op).get
-	def toJson(promise: Promise[play.api.libs.ws.Response]) = Json.parse(promise.value.get.json.toString())
+	def toJson(promise: Promise[play.api.libs.ws.Response]) = Json.parse(promise.value.get.json.toString)
 
 }
