@@ -14,20 +14,35 @@ class LinkedinSpec extends Specification {
 	import play.api.test._
 	import play.api.test.Helpers._
 
+	val linkedinPlugin = List("com.sdc.play.module.plausc.providers.oauth1.LinkedinAuthProvider")
+	val partialConfiguration = Map(
+	    		"play2-auth.linkedin.redirectUri.secure" -> "false",
+	    		"play2-auth.linkedin.accessTokenUrl" -> "hello",
+	    		"play2-auth.linkedin.authorizationUrl" -> "hello",
+	    		"play2-auth.linkedin.requestTokenUrl" -> "hello")
+	val fullConfiguration = Map(
+	    		"play2-auth.linkedin.redirectUri.secure" -> "false",
+	    		"play2-auth.linkedin.accessTokenUrl" -> "hello",
+	    		"play2-auth.linkedin.authorizationUrl" -> "hello",
+	    		"play2-auth.linkedin.requestTokenUrl" -> "hello",
+	    		"play2-auth.linkedin.consumerKey" -> "vfoplwmwdece",
+	    		"play2-auth.linkedin.consumerSecret" -> "SFKb6U0PHtpqT3ys")
+
 	def app = FakeApplication(
-	    additionalPlugins=List("com.sdc.play.module.plausc.providers.oauth1.LinkedinAuthProvider"),
-	    additionalConfiguration=Map(
-	    		"play-authenticate.linkedin.redirectUri.secure" -> "false",
-	        "play-authenticate.linkedin.accessTokenUrl" -> "hello",
-	        "play-authenticate.linkedin.authorizationUrl" -> "hello",
-	        "play-authenticate.linkedin.requestTokenUrl" -> "hello",
-	        "play-authenticate.linkedin.consumerKey" -> "vfoplwmwdece",
-	        "play-authenticate.linkedin.consumerSecret" -> "SFKb6U0PHtpqT3ys"))
+	    additionalPlugins=linkedinPlugin,
+	    additionalConfiguration=fullConfiguration)
 
 	"The Linkedin provider" should {
-		"parse JSon correctly" in {
+		"complain about completely missing configuration" in {
+			running(FakeApplication(additionalPlugins=linkedinPlugin)) {
+			} must throwA[RuntimeException](message = "No settings for provider 'linkedin' available at all!")
+		}
+		"complain about partially missing configuration" in {
+			running(FakeApplication(additionalPlugins=linkedinPlugin,additionalConfiguration=partialConfiguration)) {
+			} must throwA[RuntimeException](message = "Provider 'linkedin' is missing needed setting\\(s\\): consumerKey, consumerSecret")
+		}
+		"check its configuration" in {
 			running(app) {
-				val data = """ ... """
 			}
 		}
 	}

@@ -15,16 +15,14 @@ abstract class AuthProvider(application: Application) extends Plugin {
 
 	override def onStart = {
 
-		val c = configuration
+	    val c = configuration
 		if (c.isEmpty) throw new RuntimeException("No settings for provider '"+ getKey +"' available at all!")
 
-		for (key <- neededSettingKeys) {
-			val setting = c.get.getString(key)
-			if (setting.isEmpty || "".equals(setting.get)) {
-				throw new RuntimeException("Provider '" + getKey
-						+ "' missing needed setting '" + key + "'")
-			}
-		}
+		val missingList = neededSettingKeys filter { c.get.getString(_).isEmpty}
+	    if (!missingList.isEmpty) {
+	    	val missing = (missingList.head /: missingList.tail) (_ +", "+ _)
+	    	throw new RuntimeException("Provider '" + getKey + "' is missing needed setting(s): " + missing)
+	    }
 
 		Registry.register(getKey, this)
 	}
@@ -39,7 +37,7 @@ abstract class AuthProvider(application: Application) extends Plugin {
 
 	def getKey: String
 
-	protected def configuration = PlayAuthenticate.configuration.getConfig(getKey)
+	protected def configuration = PlayAuthenticate.configuration flatMap { _.getConfig(getKey) }
 
 	/**
 	 * Returns either an AuthUser object or a String (URL)
