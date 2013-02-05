@@ -36,7 +36,7 @@ object PlayAuthenticate {
 	private val EXPIRES_KEY    = "pa.u.exp"
 	private val SESSION_ID_KEY = "pa.s.id"
 
-	def configuration = Play.unsafeApplication.configuration.getConfig(SETTING_KEY_PLAY_AUTHENTICATE)
+	def configuration = Play.maybeApplication flatMap { _.configuration.getConfig(SETTING_KEY_PLAY_AUTHENTICATE) }
 
 	val TIMEOUT = 10l * 1000
 	private val MERGE_USER_KEY: String = null
