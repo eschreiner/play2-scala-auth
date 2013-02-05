@@ -4,7 +4,7 @@ import PlayProject._
 
 object ApplicationBuild extends Build {
 
-    val appName         = "play2-auth"
+    val appName         = "play2-scala-auth"
     val appVersion      = "0.1"
 
     val appDependencies = Seq(
